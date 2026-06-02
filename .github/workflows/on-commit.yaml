@@ -1,0 +1,38 @@
+name: Run Dummy Script
+
+# Trigger the workflow on pushes and pull requests to any branch
+on:
+  push:
+  pull_request:
+
+jobs:
+  execute-script:
+    runs-on: ubuntu-24.04
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Get releases
+        id: releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo 'releases_json<<EOF'
+            gh release list --limit 10 --json tagName
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Print versions
+        run: |
+          echo '${{ steps.releases.outputs.releases_json }}' | jq -r '.[].tagName'
+
+      # Step 2: Run an inline dummy shell script
+      - name: Run inline script
+        run: |
+          echo "🚀 Starting the dummy shell script..."
+          echo "Triggered by a: ${{ github.event_name }}"
+          echo "Branch/Ref: ${{ github.ref }}"
+          echo "✅ Dummy script finished successfully!"
