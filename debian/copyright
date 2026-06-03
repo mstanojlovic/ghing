@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: py-pure-client
+Upstream-Contact: Everpure <openconnect@everpuredata.com>
+Source: https://github.com/PureStorage-OpenConnect/py-pure-client
+
+Files: *
+Copyright: 2018-2026 Everpure Inc.
+License: BSD-2-Clause
+

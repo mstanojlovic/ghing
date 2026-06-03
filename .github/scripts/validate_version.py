@@ -3,7 +3,6 @@ import json
 import os
 import subprocess
 import sys
-import tomllib
 
 
 def parse_version(v):
@@ -26,18 +25,16 @@ def main():
         print(f"::error::Invalid version format: {version}")
         sys.exit(1)
 
-    # 2. Validate against pyproject.toml
+    # 2. Validate against pypureclient/_version.py
     try:
-        with open("pyproject.toml", "rb") as f:
-            pyproject_data = tomllib.load(f)
-            source = pyproject_data.get("project", {}).get("version")
+        from pypureclient._version import __version__ as source
     except Exception as e:
-        print(f"::error::Failed to read pyproject.toml: {e}")
+        print(f"::error::Failed to import pypureclient._version: {e}")
         sys.exit(1)
 
     if source != version:
         print(
-            f"::error::PR title version ({version}) does not match pyproject.toml version ({source})"
+            f"::error::PR title version ({version}) does not match _version.py ({source})"
         )
         sys.exit(1)
 
@@ -67,11 +64,11 @@ def main():
             print(f"::error::Version {version} is not higher than latest release {tag}")
             sys.exit(1)
         print(
-            f"Version {version} validated against pyproject.toml and previous release {tag}."
+            f"Version {version} validated against _version.py and previous release {tag}."
         )
     else:
         print(
-            f"Version {version} validated against pyproject.toml. No previous releases found."
+            f"Version {version} validated against _version.py. No previous releases found."
         )
 
 
