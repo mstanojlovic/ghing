@@ -8,10 +8,7 @@ on:
 
 jobs:
   build-deb:
-    runs-on: [ small ]
-    container:
-      image: ubuntu:24.04
-      options: --user root
+    runs-on: ubuntu-24.04
 
     name: build deb
     timeout-minutes: 5
