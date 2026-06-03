@@ -10,7 +10,7 @@ jobs:
   build-deb:
     runs-on: [ small ]
     container:
-      image: ubuntu-24.04
+      image: ubuntu:24.04
       options: --user root
 
     name: build deb
@@ -50,7 +50,6 @@ jobs:
           cat LICENSE.txt >> debian/copyright
 
       - name: Generate .deb package
-        working-directory: build
         shell: bash
         run: |
           cat <<EOF > stdeb.cfg
@@ -64,7 +63,6 @@ jobs:
           DEB_BUILD_OPTIONS=nocheck python3 setup.py --quiet --command-packages=stdeb.command bdist_deb > bdist_deb.log 2>&1 || { cat bdist_deb.log; exit 1; }
 
       - name: Run lintian
-        working-directory: build
         shell: bash
         run: |
           find ./deb_dist -name "*.deb" -exec lintian -i -I --allow-root {} +
@@ -75,7 +73,7 @@ jobs:
           name: deb-package
           overwrite: true
           retention-days: 5
-          path: build/deb_dist/**/*.deb
+          path: deb_dist/**/*.deb
 
   test-deb:
     runs-on: [ small ]
